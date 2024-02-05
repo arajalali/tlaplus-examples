@@ -6,14 +6,15 @@ CONSTANTS Goats, Wolves
 VARIABLES shore1, boat, shore2, boatLocation
 
 
+Things == Goats \union Wolves
 
-TypeOK == /\ shore1 \subseteq Goats \union Wolves
-          /\ shore2 \subseteq Goats \union Wolves
-          /\ boat \subseteq Goats \union Wolves
+TypeOK == /\ shore1 \subseteq Things
+          /\ shore2 \subseteq Things
+          /\ boat \subseteq Things
           /\ boatLocation \in {"shore1", "shore2"}
           /\ Cardinality(boat) =< 1
           
-Init == /\ shore1 = Goats \union Wolves
+Init == /\ shore1 = Things
         /\ shore2 = {}
         /\ boat = {}
         /\ boatLocation = "shore1"
@@ -53,7 +54,7 @@ BoatToShore1 == \exists x \in boat:
                 /\ shore1' = shore1 \union {x} 
                 /\ shore2' = shore2
 
-SafeToLeaveShore == IF boatLocation = "shore1" THEN
+GWSafeToLeaveShore == IF boatLocation = "shore1" THEN
                         \/ shore1 \intersect Wolves = {} 
                         \/ shore1 \intersect Goats = {}
                     ELSE 
@@ -63,7 +64,7 @@ SafeToLeaveShore == IF boatLocation = "shore1" THEN
 MoveBoat == /\ shore1' = shore1
             /\ shore2' = shore2
             /\ boat' = boat
-            /\ SafeToLeaveShore
+            /\ GWSafeToLeaveShore
             /\ IF boatLocation = "shore1" THEN
                  boatLocation' = "shore2"    
                ELSE
@@ -78,8 +79,10 @@ NextMove == \/ Shore1ToBoat
            
 
                  
-AllOnShore2 == shore2 = Goats \union Wolves  
+AllOnShore2 == shore2 = Things  
+
+
 =============================================================================
 \* Modification History
-\* Last modified Mon Feb 05 13:35:26 CET 2024 by arash
+\* Last modified Mon Feb 05 14:51:10 CET 2024 by arash
 \* Created Mon Feb 05 13:34:31 CET 2024 by arash
