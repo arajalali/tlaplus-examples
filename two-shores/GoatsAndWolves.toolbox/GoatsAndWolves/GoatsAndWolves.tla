@@ -1,18 +1,20 @@
 --------------------------- MODULE GoatsAndWolves ---------------------------
 EXTENDS Integers, FiniteSets
 
-CONSTANTS Goats, Wolves
+CONSTANTS Goats, Wolves, Cabbages
 
 VARIABLES shore1, boat, shore2, boatLocation
 
 
-Things == Goats \union Wolves
+Things == (Wolves \union Goats) \union Cabbages
+
+boatCapacity == 1
 
 TypeOK == /\ shore1 \subseteq Things
           /\ shore2 \subseteq Things
           /\ boat \subseteq Things
           /\ boatLocation \in {"shore1", "shore2"}
-          /\ Cardinality(boat) =< 1
+          /\ Cardinality(boat) =< boatCapacity
           
 Init == /\ shore1 = Things
         /\ shore2 = {}
@@ -23,7 +25,7 @@ Shore1ToBoat == \exists x \in shore1:
                 /\ boatLocation = "shore1"
                 /\ boatLocation' = "shore1"
                 /\ shore1 /= {}
-                /\ boat = {}
+                /\ Cardinality(boat) < boatCapacity
                 /\ shore1' = shore1 \ {x}
                 /\ boat' = boat \union {x}            
                 /\ shore2' = shore2
@@ -33,7 +35,7 @@ Shore2ToBoat == \exists x \in shore2:
                 /\ boatLocation = "shore2"
                 /\ boatLocation' = "shore2"
                 /\ shore2 /= {}
-                /\ boat = {}                
+                /\ Cardinality(boat) < boatCapacity
                 /\ shore2' = shore2 \ {x}
                 /\ boat' = boat \union {x} 
                 /\ shore1' = shore1
@@ -54,13 +56,15 @@ BoatToShore1 == \exists x \in boat:
                 /\ shore1' = shore1 \union {x} 
                 /\ shore2' = shore2
 
-GWSafeToLeaveShore == LET isSafe(x) == x \intersect Wolves = {} \/ x \intersect Goats = {}
-                      IN                      
-                        IF boatLocation = "shore1" THEN
+
+isSafe(x) == /\ (x \intersect Wolves = {} \/ x \intersect Goats = {})
+             /\ (x \intersect Cabbages = {} \/ x \intersect Goats = {})
+
+GWSafeToLeaveShore == IF boatLocation = "shore1" THEN
                             isSafe(shore1)
-                        ELSE 
+                      ELSE
                             isSafe(shore2)
-                           
+
 MoveBoat == /\ shore1' = shore1
             /\ shore2' = shore2
             /\ boat' = boat
@@ -84,5 +88,5 @@ AllOnShore2 == shore2 = Things
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Feb 05 16:00:15 CET 2024 by arash
+\* Last modified Mon Feb 05 22:42:20 CET 2024 by arash
 \* Created Mon Feb 05 13:34:31 CET 2024 by arash
