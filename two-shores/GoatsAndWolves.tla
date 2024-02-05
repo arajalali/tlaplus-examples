@@ -54,11 +54,12 @@ BoatToShore1 == \exists x \in boat:
                 /\ shore1' = shore1 \union {x} 
                 /\ shore2' = shore2
 
-GWSafeToLeaveShore == LET isSafe(x) == x \intersect Wolves = {} \/ x \intersect Goats = {}
-                      IN
-                        IF boatLocation = "shore1" THEN
+
+isSafe(x) == x \intersect Wolves = {} \/ x \intersect Goats = {}
+
+GWSafeToLeaveShore == IF boatLocation = "shore1" THEN
                             isSafe(shore1)
-                        ELSE
+                      ELSE
                             isSafe(shore2)
 
 MoveBoat == /\ shore1' = shore1
@@ -84,5 +85,5 @@ AllOnShore2 == shore2 = Things
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Feb 05 16:01:13 CET 2024 by arash
+\* Last modified Mon Feb 05 16:16:49 CET 2024 by arash
 \* Created Mon Feb 05 13:34:31 CET 2024 by arash
