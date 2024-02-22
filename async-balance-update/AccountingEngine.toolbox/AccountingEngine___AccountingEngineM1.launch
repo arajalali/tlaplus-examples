@@ -2,10 +2,10 @@
 <launchConfiguration type="org.lamport.tla.toolbox.tool.tlc.modelCheck">
     <stringAttribute key="configurationName" value="AccountingEngineM1"/>
     <intAttribute key="distributedFPSetCount" value="0"/>
-    <stringAttribute key="distributedNetworkInterface" value="100.64.100.6"/>
+    <stringAttribute key="distributedNetworkInterface" value="192.168.90.74"/>
     <intAttribute key="distributedNodesCount" value="1"/>
     <stringAttribute key="distributedTLC" value="off"/>
-    <intAttribute key="fpIndex" value="24"/>
+    <intAttribute key="fpIndex" value="30"/>
     <intAttribute key="maxHeapSize" value="25"/>
     <stringAttribute key="modelBehaviorInit" value="AEInit"/>
     <stringAttribute key="modelBehaviorNext" value="AENext"/>
@@ -16,17 +16,21 @@
     <booleanAttribute key="modelCorrectnessCheckDeadlock" value="false"/>
     <listAttribute key="modelCorrectnessInvariants">
         <listEntry value="1AETypeOK"/>
-        <listEntry value="1AEAllUptoDate =&gt; \forall g \in Groups: balances[g] = AESumOf[transactions, g]"/>
     </listAttribute>
     <listAttribute key="modelCorrectnessProperties">
-        <listEntry value="1&lt;&gt;(AEAllUptoDate /\ ~AEInit)"/>
+        <listEntry value="1&lt;&gt;(AEEverythingAddsUp /\ ~AEInit)"/>
     </listAttribute>
     <intAttribute key="modelEditorOpenTabs" value="8"/>
     <stringAttribute key="modelExpressionEval" value=""/>
+    <stringAttribute key="modelParameterActionConstraint" value=""/>
     <listAttribute key="modelParameterConstants">
-        <listEntry value="Values;;{-1, 0, 1};0;0"/>
+        <listEntry value="Values;;{-1, 1};0;0"/>
         <listEntry value="Groups;;{&quot;g1&quot;, &quot;g2&quot;};0;0"/>
     </listAttribute>
+    <stringAttribute key="modelParameterContraint" value=""/>
+    <listAttribute key="modelParameterDefinitions"/>
+    <stringAttribute key="modelParameterModelValues" value="{}"/>
+    <stringAttribute key="modelParameterNewDefinitions" value=""/>
     <intAttribute key="modelVersion" value="20191005"/>
     <intAttribute key="numberOfWorkers" value="4"/>
     <stringAttribute key="result.mail.address" value=""/>

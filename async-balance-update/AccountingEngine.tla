@@ -6,6 +6,8 @@ CONSTANTS Groups, Values
 
 VARIABLES transactions, balances, lastAppliedTransaction
 
+vars == <<transactions, balances, lastAppliedTransaction>>
+
 ASSUME Groups \subseteq STRING
 ASSUME Values \subseteq Int
 
@@ -19,7 +21,7 @@ AEInit == /\ transactions = << >>
 
        
 AENewTransaction == \exists v \in Values, g \in Groups: /\ transactions' = transactions \o << [value |-> v, group |-> g] >>
-                                                        /\ Len(transactions') < 8
+                                                        /\ Len(transactions) < 7
                                                         /\ lastAppliedTransaction' = lastAppliedTransaction
                                                         /\ balances' = balances
                                                        
@@ -30,9 +32,13 @@ AEUpdateBalance == /\ lastAppliedTransaction /= Len(transactions)
                              /\ lastAppliedTransaction' = lastAppliedTransaction + 1
                              /\ transactions' = transactions )
                                                
-AENext == \/ AENewTransaction
-          \/ AEUpdateBalance     
+AENext ==  AENewTransaction \/ AEUpdateBalance
 
+Spec == /\ AEInit
+        /\ [][AENext]_vars
+        /\ WF_vars(AEUpdateBalance)
+        /\ WF_vars(AENewTransaction)
+        
 
 AESumOf[tx \in Seq([value: Values, group: Groups]), g \in Groups] == IF tx = << >> THEN 0 
                                                                      ELSE AESumOf[Tail(tx),g] + 
@@ -42,13 +48,13 @@ AEAllUptoDate == lastAppliedTransaction = Len(transactions)
 
 AEBalancesOutOfDate == lastAppliedTransaction /= Len(transactions)
 
-AEBalancesFinallyUptodate == AEBalancesOutOfDate => <>AEAllUptoDate
-
-AEHistoryOK == []~(lastAppliedTransaction > Len(transactions))
+AEHistoryOK == ~(lastAppliedTransaction > Len(transactions))
 
 AEEverythingAddsUp == \forall g \in Groups: AESumOf[transactions, g] = balances[g]
+
+AEBalanceUpdateCorrect == AEAllUptoDate => AEEverythingAddsUp
                       
 ============================================================================
 \* Modification History
-\* Last modified Wed Feb 14 14:56:54 CET 2024 by arash
+\* Last modified Thu Feb 15 12:45:51 CET 2024 by arash
 \* Created Thu Feb 08 21:39:50 CET 2024 by arash
